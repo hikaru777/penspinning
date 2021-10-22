@@ -6,21 +6,22 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 class mainViewController: UIViewController {
+    
+    @IBOutlet var emailField: UITextField!
+     @IBOutlet var passwordField: UITextField!
     
     var handle: AuthStateDidChangeListenerHandle?
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+        }
     override func viewWillAppear(_ animated: Bool) {
         handle = Auth.auth().addStateDidChangeListener { auth, user in
-            
+        
         }
     }
     
@@ -29,6 +30,21 @@ class mainViewController: UIViewController {
         Auth.auth().removeStateDidChangeListener(handle!)
 
     }
+      
+       @IBAction func didTapSignIn(_ sender: UIButton) {
+
+        if let email = emailField.text, let password = passwordField.text {
+               Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+                   guard let user = authResult?.user, error == nil else {
+                       print("サインインに失敗しました:" ,error!.localizedDescription)
+                       return
+                   }
+                   print("サインインに成功しました", user.email!)
+                
+               }
+           }
+       }
+
     
 
     /*

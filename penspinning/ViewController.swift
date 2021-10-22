@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 class ViewController: UIViewController {
     
@@ -21,15 +21,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func loginButtonPressed() {
-        if emailField.text != "", passwordField.text != "" {
-            Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { authResult, error in
-                if error == nil, let authResult = authResult {
-                    
-//                    self.performSegue(withIdentifier: <#T##String#>, sender: <#T##Any?#>)
+        if let email = emailField.text, let password = passwordField.text {
+            Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
+                guard let user = authResult?.user, error == nil else   {
+                    print("登録に失敗しました:" ,error!.localizedDescription)
+                    return
                 }
-                
+                print("登録に成功しました", user.email!)
+              //  performSegue(withIdentifier: "signIn", sender: nil)
             }
         }
-    }
+    }//guard let user = authResult?.user, error == nil else
 }
+    
 
